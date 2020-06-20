@@ -1,6 +1,5 @@
 import React from "react";
 import Nav from '../organisms/Nav';
-import { Link } from "react-router-dom";
 
 interface Props {
     
