@@ -1,31 +1,34 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { gql } from "apollo-boost";
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery } from "@apollo/react-hooks";
 
 interface Props {
-    title: string
+  title: string;
 }
 
-const EXCHANGE_RATES = gql`
+const ITEM = gql`
   {
-    rates(currency: "USD") {
-      currency
-      rate
+    getOneItem(id: 1) {
+      id
+      list {
+        id
+        name
+      }
     }
   }
 `;
 
-export const Apollo: React.FC<Props> = ({title}) => {
-    const { loading, error, data } = useQuery(EXCHANGE_RATES);
-    useEffect(()=>{
+export const Apollo: React.FC<Props> = ({ title }) => {
+  const { loading, error, data, refetch, networkStatus } = useQuery(ITEM, {
+    notifyOnNetworkStatusChange: true, //  Includes information about refetching and polling status.
+  });
+  useEffect(() => {}, []);
 
-    }, []);
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :(</p>;
-    return (
-        <div>
-            { data.rates.map((rate: any) => <p> {rate.currency} </p>)}
-        </div>
-    );
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+  return (
+    <div>
+      <p> {JSON.stringify(data)} </p>
+    </div>
+  );
 };
