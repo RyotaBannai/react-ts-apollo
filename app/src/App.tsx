@@ -12,7 +12,6 @@ import { Main } from "./pages/Main";
 import { Sub } from "./pages/Sub";
 
 const cache = new InMemoryCache();
-
 const data = {
   todos: [],
   visibilityFilter: "SHOW_ALL",
@@ -21,6 +20,8 @@ const data = {
     isConnected: false,
   },
 };
+// initialize local state
+cache.writeData({ data });
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -32,36 +33,9 @@ const client = new ApolloClient({
   //     },
   //   },
   resolvers: {
-    Mutation: {
-      addTodo: (_root, variables, { cache, getCacheKey }) => {
-        //const id = getCacheKey({ __typename: "TodoItem", id: variables.id });
-        const query = gql`
-          query TodoQuery {
-            todos {
-              id
-              completed
-              text
-            }
-          }
-        `;
-        const data = cache.readQuery({ query });
-        console.log(data);
-        const myNewTodo = {
-          ...variables,
-          __typename: "Todo",
-        };
-        cache.writeQuery({
-          query,
-          data: { todos: [...data.todos, myNewTodo] },
-        });
-        return null;
-      },
-    },
+    /** Please define resolvers in each component  addResolvers API **/
   },
 });
-
-// initialize local state
-cache.writeData({ data });
 // reset the store, say a user logs out.
 client.onResetStore(async () => await cache.writeData({ data }));
 

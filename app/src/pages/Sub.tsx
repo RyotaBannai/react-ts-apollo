@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation, useApolloClient } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Button from "@material-ui/core/Button";
 
@@ -12,7 +12,6 @@ const GET_TODOS = gql`
       completed
       text
     }
-    visibilityFilter @client
   }
 `;
 
@@ -21,6 +20,57 @@ const ADD_TODO = gql`
     addTodo(id: $id, completed: $completed, text: $text) @client
   }
 `;
+
+const resolvers = {
+  Mutation: {
+    // Doesn't matter the object type is Mutation or other name.
+    addTodo: (_root: any, variables: any, { cache, getCacheKey }: any) => {
+      //const id = getCacheKey({ __typename: "Todo", id: variables.id });
+      console.log("called");
+      const query = gql`
+        query TodoQuery {
+          todos @client {
+            id
+            completed
+            text
+          }
+        }
+      `;
+      const data = cache.readQuery({ query });
+      const myNewTodo = {
+        ...variables,
+        __typename: "Todo",
+      };
+      // you can also do cache.writeData({ data }) here if you prefer
+      cache.writeQuery({
+        query, // passing the shape of data to check whether the passing data is the same as the shape of the data
+        data: { todos: [...data.todos, myNewTodo] },
+      });
+      return null;
+    },
+    updateTodo: (_root: any, variables: any, { cache, getCacheKey }: any) => {
+      const id = getCacheKey({ __typename: "Todo", id: variables.id });
+      const query = gql`
+        fragment TodoQuery on Toto {
+          id
+          text
+          completed
+        }
+      `;
+      const todo = cache.readFragment({ query, id });
+      // console.log(data);
+      // const myNewTodo = {
+      //   ...variables,
+      //   __typename: "Todo",
+      // };
+      // cache.writeQuery({
+      //   query,
+      //   data: { todos: [...data.todos, myNewTodo] },
+      // });
+      return null;
+    },
+  },
+};
 
 class Counter {
   constructor(private _uuid: number = 0) {}
@@ -34,6 +84,9 @@ export const Sub: React.FC<Props> = () => {
   let input: any = "";
   const { data } = useQuery(GET_TODOS);
   const [addTodo] = useMutation(ADD_TODO);
+  const client = useApolloClient();
+  client.addResolvers(resolvers);
+  console.log("hi");
 
   return (
     <div style={{ margin: "10px" }}>
