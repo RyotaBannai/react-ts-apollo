@@ -1,11 +1,12 @@
 import React from "react";
-import { Apollo } from '../organisms/Apollo'
+import { Apollo } from "../organisms/Apollo";
 
-interface Props { }
+interface Props {}
 
 export const Main: React.FC<Props> = () => {
-    return (<div>
-            <Apollo title={'Apollo Experiment'}/>
-        </div>
-    )
+  return (
+    <div>
+      <Apollo title={"Apollo Experiment"} />
+    </div>
+  );
 };

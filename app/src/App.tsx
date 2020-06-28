@@ -7,9 +7,16 @@ import "bootstrap/dist/js/bootstrap.js";
 import "./App.css";
 import { Template } from "./templates/Template";
 import { Main } from "./pages/Main";
+import { Sub } from "./pages/Sub";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
+  cacheRedirects: {
+    Query: {
+      item: (_, { id }, { getOneItem }) =>
+        getOneItem({ id, __typename: "Item" }),
+    },
+  },
 });
 
 export default function App() {
@@ -19,6 +26,7 @@ export default function App() {
         <Router>
           <Template>
             <Route exact path="/" component={Main} />
+            <Route exact path="/sub" component={Sub} />
           </Template>
         </Router>
       </div>
