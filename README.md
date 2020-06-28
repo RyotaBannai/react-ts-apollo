@@ -14,3 +14,7 @@ Builds on react + ts + apollo
 - Updating a single existing entity -> mutation does automatically because mutation returns its id. But if a mutation `modifies multiple entities`, or if it `creates or deletes entities`, the Apollo Client cache is `not` automatically updated to reflect the result of the mutation. To resolve this, your call to `useMutation` can include an `update function`.
 
 - By leveraging `Apollo Client's local state functionality`, you can add `client-side only fields` to your remote data seamlessly and query them from your components.
+
+### State Management
+
+- It's important to note that `direct writes` are not implemented as `GraphQL mutations` under the hood, so `you shouldn't include them in your schema`. They also `do not validate that the data you're writing to the cache is in the shape of valid GraphQL data`.

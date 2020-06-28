@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { gql } from "apollo-boost";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 
