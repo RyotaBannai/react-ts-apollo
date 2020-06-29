@@ -46,9 +46,11 @@ const resolvers = {
   },
 };
 
+let fetch_options = { skip: 0, take: 2, current: 0 };
 export const Pagination: React.FC<Props> = () => {
-  const { called, loading, data } = useQuery(GET_ITEMS, {
-    variables: { skip: 0, take: 2, current: 0 },
+  const { called, loading, data, fetchMore } = useQuery(GET_ITEMS, {
+    variables: fetch_options,
+    // fetchPolicy: "cache-and-network", // this have Apollo update automatically the returns...
   });
   const client = useApolloClient();
   client.addResolvers(resolvers);
@@ -63,6 +65,25 @@ export const Pagination: React.FC<Props> = () => {
         color="primary"
         onClick={(e: any) => {
           e.preventDefault();
+          fetch_options = {
+            ...fetch_options,
+            current: fetch_options.current + 1,
+          };
+          //   fetchMore({
+          //     variables: fetch_options,
+          //     updateQuery: (
+          //       previousQueryResult,
+          //       { fetchMoreResult, variables }
+          //     ) => {
+          //       if (!fetchMoreResult) return previousQueryResult;
+          //       return {
+          //         getItems: previousQueryResult.getItems.concat(
+          //           fetchMoreResult.getItems
+          //         ),
+          //       };
+          //       //console.log(prev);
+          //     },
+          //   });
         }}
       >
         Fetch Next

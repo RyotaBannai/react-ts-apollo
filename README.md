@@ -81,4 +81,7 @@ const query = gql`
 
 - [Why react function component renders twice](https://mariosfakiolas.com/blog/my-react-components-render-twice-and-drive-me-crazy/)
 - [Why Apollo render three times](https://github.com/trojanowski/react-apollo-hooks/issues/36#issuecomment-448055185)
+
   - Render with cache-data, render while loading, render with data-result = 3 times
+
+- `Pagination`: By default, `fetchMore` will use **the original query**, so we just pass in new variables is enough to get new data from server. Once the new data is returned from the server, the `updateQuery` function is used to merge it with the existing data, which will cause a re-render of your UI component with an expanded list.
