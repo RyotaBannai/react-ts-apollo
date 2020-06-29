@@ -7,7 +7,8 @@ interface Props {}
 
 const GET_ITEMS = gql`
   query GetItems($skip: Int, $take: Int, $current: Int) {
-    getItems(skip: $skip, take: $take, current: $current) {
+    getItems(skip: $skip, take: $take, current: $current)
+      @connection(key: "items", filter: ["id"]) {
       id
       data
       type
@@ -69,21 +70,18 @@ export const Pagination: React.FC<Props> = () => {
             ...fetch_options,
             current: fetch_options.current + 1,
           };
-          //   fetchMore({
-          //     variables: fetch_options,
-          //     updateQuery: (
-          //       previousQueryResult,
-          //       { fetchMoreResult, variables }
-          //     ) => {
-          //       if (!fetchMoreResult) return previousQueryResult;
-          //       return {
-          //         getItems: previousQueryResult.getItems.concat(
-          //           fetchMoreResult.getItems
-          //         ),
-          //       };
-          //       //console.log(prev);
-          //     },
-          //   });
+          fetchMore({
+            variables: fetch_options,
+            updateQuery: (previousQueryResult, { fetchMoreResult }) => {
+              if (!fetchMoreResult) return previousQueryResult;
+              return {
+                getItems: [
+                  ...previousQueryResult.getItems,
+                  ...fetchMoreResult.getItems,
+                ],
+              };
+            },
+          });
         }}
       >
         Fetch Next
