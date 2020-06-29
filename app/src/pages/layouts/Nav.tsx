@@ -41,6 +41,13 @@ export default function Layout() {
               </div>
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink exact to="/pagination" activeClassName="active">
+              <div className="nav-link">
+                Pagination <span className="sr-only">(current)</span>
+              </div>
+            </NavLink>
+          </li>
         </ul>
       </div>
     </nav>

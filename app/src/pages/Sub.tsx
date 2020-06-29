@@ -48,6 +48,7 @@ const resolvers = {
       });
       return null;
     },
+    // TODO: You should not split CRUD different resolver here.
     updateTodo: (_root: any, variables: any, { cache, getCacheKey }: any) => {
       const id = getCacheKey({ __typename: "Todo", id: variables.id });
       const query = gql`
@@ -86,7 +87,6 @@ export const Sub: React.FC<Props> = () => {
   const [addTodo] = useMutation(ADD_TODO);
   const client = useApolloClient();
   client.addResolvers(resolvers);
-  console.log("hi");
 
   return (
     <div style={{ margin: "10px" }}>
@@ -111,7 +111,7 @@ export const Sub: React.FC<Props> = () => {
           input.value = "";
         }}
       >
-        Default
+        Add Todo
       </Button>
       {data.todos.map((todo: any) => (
         <p key={todo.id}>{todo.text}</p>

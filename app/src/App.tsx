@@ -10,6 +10,7 @@ import "./App.css";
 import { Index } from "./pages/layouts/Index";
 import { Main } from "./pages/Main";
 import { Sub } from "./pages/Sub";
+import { Pagination } from "./pages/DemoPagination";
 
 const cache = new InMemoryCache();
 const data = {
@@ -47,6 +48,7 @@ export default function App() {
           <Index>
             <Route exact path="/" component={Main} />
             <Route exact path="/sub" component={Sub} />
+            <Route exact path="/pagination" component={Pagination} />
           </Index>
         </Router>
       </div>
