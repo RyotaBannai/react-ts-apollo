@@ -7,7 +7,7 @@ import gql from "graphql-tag";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
 import "./App.css";
-import { Template } from "./templates/Template";
+import { Index } from "./pages/layouts/Index";
 import { Main } from "./pages/Main";
 import { Sub } from "./pages/Sub";
 
@@ -44,10 +44,10 @@ export default function App() {
     <ApolloProvider client={client}>
       <div className="App">
         <Router>
-          <Template>
+          <Index>
             <Route exact path="/" component={Main} />
             <Route exact path="/sub" component={Sub} />
-          </Template>
+          </Index>
         </Router>
       </div>
     </ApolloProvider>

@@ -1,9 +1,9 @@
 import React from "react";
-import Nav from "../organisms/Nav";
+import Nav from "./Nav";
 
 interface Props {}
 
-export const Template: React.FC<Props> = (props) => {
+export const Index: React.FC<Props> = (props) => {
   return (
     <div>
       <link

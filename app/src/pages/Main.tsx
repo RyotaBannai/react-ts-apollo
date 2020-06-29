@@ -1,5 +1,5 @@
 import React from "react";
-import { Apollo } from "../organisms/Apollo";
+import { Apollo } from "../components/Apollo";
 
 interface Props {}
 
