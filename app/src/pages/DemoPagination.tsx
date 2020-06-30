@@ -1,23 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useApolloClient } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Button from "@material-ui/core/Button";
 
 interface Props {}
 
+const ITEM_FRAGMENTS = {
+  fields: gql`
+    fragment ItemFields on Item {
+      id
+      data
+      type
+    }
+  `,
+};
+
+const LIST_FRAGMENTS = {
+  fields: gql`
+    fragment ListFields on List {
+      id
+      name
+    }
+  `,
+};
+
 const GET_ITEMS = gql`
   query GetItems($skip: Int, $take: Int, $current: Int) {
     getItems(skip: $skip, take: $take, current: $current)
       @connection(key: "items", filter: ["id"]) {
-      id
-      data
-      type
+      ...ItemFields
       list {
-        id
-        name
+        ...ListFields
       }
     }
   }
+  ${ITEM_FRAGMENTS.fields}
+  ${LIST_FRAGMENTS.fields}
 `;
 
 const resolvers = {
@@ -49,8 +67,15 @@ const resolvers = {
 
 let fetch_options = { skip: 0, take: 2, current: 0 };
 export const Pagination: React.FC<Props> = () => {
-  const { called, loading, data, fetchMore } = useQuery(GET_ITEMS, {
+  useEffect(
+    () => () => {
+      console.log("cleaned up");
+    },
+    []
+  );
+  const { called, loading, error, data, fetchMore } = useQuery(GET_ITEMS, {
     variables: fetch_options,
+    errorPolicy: "all",
     // fetchPolicy: "cache-and-network", // this have Apollo update automatically the returns...
   });
   const client = useApolloClient();
@@ -59,6 +84,13 @@ export const Pagination: React.FC<Props> = () => {
   if (!called) {
     return <div>Press button to fetch next chunk</div>;
   }
+  if (error)
+    return (
+      <pre style={{ textAlign: "left" }}>
+        Bad: {JSON.stringify(error, null, 2)}
+      </pre>
+    );
+  if (!data?.getItems) return <div>No data founded ...</div>;
   return (
     <div style={{ margin: "10px" }}>
       <Button

@@ -12,7 +12,15 @@ import { Main } from "./pages/Main";
 import { Sub } from "./pages/Sub";
 import { Pagination } from "./pages/DemoPagination";
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  cacheRedirects: {
+    // useful if you have a list of item in the cache and want to get a few item from them.
+    Query: {
+      item: (_, { id }, { getOneItem }) =>
+        getOneItem({ id, __typename: "Item" }),
+    },
+  },
+});
 const data = {
   todos: [],
   visibilityFilter: "SHOW_ALL",
@@ -27,12 +35,6 @@ cache.writeData({ data });
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
   cache,
-  //   cacheRedirects: {
-  //     Query: {
-  //       item: (_, { id }, { getOneItem }) =>
-  //         getOneItem({ id, __typename: "Item" }),
-  //     },
-  //   },
   resolvers: {
     /** Please define resolvers in each component  addResolvers API **/
   },
