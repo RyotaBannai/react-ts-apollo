@@ -1,8 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { ApolloProvider } from "@apollo/react-hooks";
-import ApolloClient from "apollo-boost";
+import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
+import { HttpLink } from "apollo-link-http";
+import { ApolloLink, concat } from "apollo-link";
 import gql from "graphql-tag";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
@@ -32,8 +34,9 @@ const data = {
 // initialize local state
 cache.writeData({ data });
 
+const link = new HttpLink({ uri: "http://localhost:4000/graphql" });
 const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
+  link,
   cache,
   resolvers: {
     /** Please define resolvers in each component  addResolvers API **/

@@ -85,3 +85,9 @@ const query = gql`
   - Render with cache-data, render while loading, render with data-result = 3 times
 
 - `Pagination`: By default, `fetchMore` will use **the original query**, so we just pass in new variables is enough to get new data from server. Once the new data is returned from the server, the `updateQuery` function is used to merge it with the existing data, which will cause a re-render of your UI component with an expanded list.
+- `Fragments on unions and interfaces`: Heuristic fragment matcher works in most cases, but it also means that `Apollo Client cannot check the server response for you`, and it cannot tell you when `you're manually writing invalid data` into the store using update, updateQuery, writeQuery, etc. Also, `the heuristic fragment matcher will not work accurately when using fragments with unions or interfaces`. Apollo Client will let you know this with a console warning (in development), if it attempts to use the default heuristic fragment matcher with unions/interfaces. The `IntrospectionFragmentMatcher` is the solution for working with unions/interfaces.
+
+- `Error handling`: By default, the error policy treats any GraphQL Errors as network errors and ends the request chain.
+
+- `Afterware` is very similar to a middleware, except that an afterware `runs after a request has been made`, that is when a response is going to get processed. It's perfect for responding to the situation where a user becomes logged out during their session.
+- `Query deduplication`: can be useful if many components `display the same data`, but `you don't want to fetch that data from the server many times.`

@@ -73,12 +73,15 @@ export const Pagination: React.FC<Props> = () => {
     },
     []
   );
-  const { called, loading, error, data, fetchMore } = useQuery(GET_ITEMS, {
-    variables: fetch_options,
-    errorPolicy: "all",
-    // fetchPolicy: "cache-and-network", // this have Apollo update automatically the returns...
-  });
-  const client = useApolloClient();
+  const { client, called, loading, error, data, fetchMore } = useQuery(
+    GET_ITEMS,
+    {
+      variables: fetch_options,
+      errorPolicy: "all",
+      // fetchPolicy: "cache-and-network", // this have Apollo update automatically the returns...
+    }
+  );
+  // const client = useApolloClient();
   client.addResolvers(resolvers);
   if (called && loading) return <p>Loading ...</p>;
   if (!called) {
