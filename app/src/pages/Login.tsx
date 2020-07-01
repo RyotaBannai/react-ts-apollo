@@ -1,5 +1,6 @@
 import React from "react";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation, useApolloClient } from "@apollo/react-hooks";
+import { ApolloClient } from "apollo-client";
 import gql from "graphql-tag";
 import {
   Button,
@@ -24,7 +25,13 @@ export const Login: React.FC<Props> = () => {
   let name: any = "";
   let email: any = "";
   let password: any = "";
-  const [addUser, data] = useMutation(ADD_USER);
+  const client: ApolloClient<any> = useApolloClient();
+  const [addUser, { data, loading, called }] = useMutation(ADD_USER, {
+    onCompleted({ createUser: { token } }) {
+      localStorage.setItem("token", token as string);
+      client.writeData({ data: { isLoggedIn: true } });
+    },
+  });
   return (
     <div>
       <div style={{ margin: "10px" }}>
@@ -88,7 +95,7 @@ export const Login: React.FC<Props> = () => {
               Add Todo
             </Button>
           </Grid>
-          <Grid item>{JSON.stringify(data.data)}</Grid>
+          <Grid item>{JSON.stringify(data)}</Grid>
         </Grid>
       </div>
     </div>

@@ -17,6 +17,7 @@
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.5",
     "apollo-boost": "^0.4.9",
+    "apollo-link-context": "^1.0.20",
     "bootstrap": "^4.5.0",
     "graphql": "^15.1.0",
     "jquery": "^3.5.1",
