@@ -13,6 +13,7 @@ import { Index } from "./pages/layouts/Index";
 import { Main } from "./pages/Main";
 import { Sub } from "./pages/Sub";
 import { Pagination } from "./pages/DemoPagination";
+import { Login } from "./pages/Login";
 
 const cache = new InMemoryCache({
   cacheRedirects: {
@@ -41,6 +42,7 @@ const client = new ApolloClient({
   resolvers: {
     /** Please define resolvers in each component  addResolvers API **/
   },
+  connectToDevTools: true,
 });
 // reset the store, say a user logs out.
 client.onResetStore(async () => await cache.writeData({ data }));
@@ -54,6 +56,7 @@ export default function App() {
             <Route exact path="/" component={Main} />
             <Route exact path="/sub" component={Sub} />
             <Route exact path="/pagination" component={Pagination} />
+            <Route exact path="/login" component={Login} />
           </Index>
         </Router>
       </div>
