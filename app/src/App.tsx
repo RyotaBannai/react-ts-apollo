@@ -2,11 +2,13 @@ import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { ApolloClient } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import {
+  InMemoryCache,
+  IntrospectionFragmentMatcher,
+} from "apollo-cache-inmemory";
+import introspectionQueryResultData from "./introspection/fragmentTypes.json";
 import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
-import { ApolloLink, concat } from "apollo-link";
-import gql from "graphql-tag";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
 import "./App.css";
@@ -15,8 +17,14 @@ import { Main } from "./pages/Main";
 import { Sub } from "./pages/Sub";
 import { Pagination } from "./pages/DemoPagination";
 import { Login } from "./pages/Login";
+import { Signin } from "./pages/Signin";
+
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData,
+});
 
 const cache = new InMemoryCache({
+  fragmentMatcher,
   cacheRedirects: {
     // useful if you have a list of item in the cache and want to get a few item from them.
     Query: {
@@ -71,6 +79,7 @@ export default function App() {
             <Route exact path="/sub" component={Sub} />
             <Route exact path="/pagination" component={Pagination} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/signin" component={Signin} />
           </Index>
         </Router>
       </div>

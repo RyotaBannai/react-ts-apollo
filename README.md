@@ -91,3 +91,11 @@ const query = gql`
 
 - `Afterware` is very similar to a middleware, except that an afterware `runs after a request has been made`, that is when a response is going to get processed. It's perfect for responding to the situation where a user becomes logged out during their session.
 - `Query deduplication`: can be useful if many components `display the same data`, but `you don't want to fetch that data from the server many times.`
+- After an user logs out, you needs to clear token [here](https://www.apollographql.com/docs/react/networking/authentication/)
+- [Introspection - fragment-mater reference on Medium](https://medium.com/commutatus/whats-going-on-with-the-heuristic-fragment-matcher-in-graphql-apollo-client-e721075e92be)
+- [Apollo Client docs ref `IntrospectionFragmentMatcher`](https://www.apollographql.com/docs/react/data/fragments/)
+- [jwt nestjs implementation example](https://tea.ch/article/authentication-with-passport-jwt/)
+- [jwt Node.js/Express example - シェルスクリプトマガジン](https://shell-mag.com/nodejs-59/)
+- [JWT Authentication Node.js Tuto with GraphQL and react - Ben](https://www.youtube.com/watch?v=25GS0MLT8JU)
+- [detect if an attribute like password has changed](https://github.com/typeorm/typeorm/issues/2624): use `@BeforeInsert()` `@BeforeUpdate()`
+- [Authorization TypeGraphQl - Ben](Authorization TypeGraphQL)
