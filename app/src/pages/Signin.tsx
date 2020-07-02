@@ -1,35 +1,43 @@
 import React from "react";
-import { useLazyQuery, useApolloClient } from "@apollo/react-hooks";
-import { ApolloClient } from "apollo-client";
+import { useQuery, useMutation, useApolloClient } from "@apollo/react-hooks";
+import { ApolloClient, ApolloError } from "apollo-client";
 import gql from "graphql-tag";
-import { Button, InputLabel, OutlinedInput, Grid } from "@material-ui/core";
+import {
+  Button,
+  Input,
+  InputLabel,
+  OutlinedInput,
+  Grid,
+} from "@material-ui/core";
 
-const LOGIN = gql`
-  query LOGIN($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      ... on LoginFails {
-        message
-      }
-      ... on TokenEntity {
-        token
-        expires_in
-      }
+const ADD_USER = gql`
+  mutation CREATE($name: String, $email: String, $password: String) {
+    createUser(data: { name: $name, email: $email, password: $password }) {
+      token
+      expires_in
     }
   }
 `;
 
 interface Props {}
 
-export const Login: React.FC<Props> = () => {
+export const Signin: React.FC<Props> = () => {
+  let name: any = "";
   let email: any = "";
   let password: any = "";
   const client: ApolloClient<any> = useApolloClient();
-  const [login, { called, loading, data }] = useLazyQuery(LOGIN);
-
+  const [addUser, { data, loading, called }] = useMutation(ADD_USER, {
+    onCompleted({ createUser: { token } }) {
+      localStorage.setItem("token", token as string);
+      client.writeData({ data: { isLoggedIn: true } });
+    },
+    onError(error: ApolloError) {
+      console.log(error);
+    },
+  });
   return (
     <div>
       <div style={{ margin: "10px" }}>
-        <h2>Login</h2>
         <Grid
           container
           justify="center"
@@ -37,6 +45,16 @@ export const Login: React.FC<Props> = () => {
           direction="column"
           spacing={1}
         >
+          <Grid item>
+            <InputLabel htmlFor="name">Name</InputLabel>
+            <OutlinedInput
+              id="name"
+              required
+              inputRef={(node) => {
+                name = node;
+              }}
+            />
+          </Grid>
           <Grid item>
             <InputLabel htmlFor="email">Email</InputLabel>
             <OutlinedInput
@@ -65,12 +83,16 @@ export const Login: React.FC<Props> = () => {
                 console.log("clicked");
                 e.preventDefault();
                 let variables: any = {
+                  name: name.value,
                   email: email.value,
                   password: password.value,
                 };
-                login({
+                addUser({
                   variables,
                 });
+                name.value = "";
+                email.value = "";
+                password.value = "";
               }}
             >
               Add Todo

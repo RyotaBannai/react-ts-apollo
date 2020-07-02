@@ -55,6 +55,13 @@ export default function Layout() {
               </div>
             </NavLink>
           </li>
+          <li>
+            <NavLink exact to="/signin" activeClassName="active">
+              <div className="nav-link">
+                Sign In <span className="sr-only">(current)</span>
+              </div>
+            </NavLink>
+          </li>
         </ul>
       </div>
     </nav>
