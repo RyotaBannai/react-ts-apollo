@@ -206,3 +206,57 @@ fields: {
         },
       },
 ```
+
+#### Customizing the behavior of cached fields
+
+- cached fields の動作をカスタマイズしたいときは、`typePolicies`(`InMemoryCache` のプロパティ) に動作内容を全て記述する。
+- typePolicies に使う関数は次の２つ:
+  - A `read function` that specifies what happens when the field's cached value is `read`
+  - A `merge function` that specifies what happens when field's cached value is `written`
+
+```javascript
+Person: {
+      fields: {
+        name: {
+          read(name) {
+            // Return the cached name, transformed to upper case
+            return name.toUpperCase();
+          }
+        }
+      },
+    },
+```
+
+- you can set default value as well. `read(name = "UNKNOWN NAME") {...}`
+- If a field accepts arguments, the second parameter includes the values of those arguments. `name(name: string, { args }) {...}`
+- You can define a `read` function for a field that `isn't even defined in your schema.` → 状態管理で `local-only fields` を使うときも呼び出し時に `read` を使う。
+
+- `merge`: the cache calls that function `whenever the field is about to be written with an incoming value` (such as from your GraphQL server) → called just right before incoming is written in the cache.
+  - **By default**, the field's existing array is `completely replaced by the incoming array`. Often, it's preferable to `concatenate the two arrays instead`
+  - Your `merge function` cannot push the incoming array directly onto the existing array. It must instead `return a new array` to prevent potential errors.
+
+```javascript
+fields: {
+        tasks: {
+          merge(existing = [], incoming: any[]) {
+            return [...existing, ...incoming];
+          },
+        },
+      },
+```
+
+- `mergeObjects`: calls author custom merge function before merge books.
+
+```javascript
+fields: {
+        author: {
+          merge(existing, incoming, { mergeObjects }) {
+            // Correct, thanks to invoking nested merge functions.
+            return mergeObjects(existing, incoming);
+          },
+        },
+      },
+```
+
+- `readField` helper function: more robust than using `author.name`, because it also tolerates the possibility that the author is a `Reference object referring to data elsewhere in the cache`, which could happen if you (or someone else on your team) eventually gets around to specifying keyFields for the Author type.
+- [FieldPolicy API reference](https://www.apollographql.com/docs/react/caching/cache-field-behavior/#fieldpolicy-api-reference)
